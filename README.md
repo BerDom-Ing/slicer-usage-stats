@@ -1,5 +1,7 @@
 # slicer-usage-stats
 
+[![Actions Status][actions-badge]][actions-link]
+
 [![Discourse Forum][discourse-forum-badge]][discourse-forum-link]
 
 Sources of the website allowing to visualize [3D Slicer](https://slicer.org)
@@ -25,6 +27,8 @@ It is covered by the Apache License, Version 2.0:
 https://www.apache.org/licenses/LICENSE-2.0
 
 <!-- prettier-ignore-start -->
+[actions-badge]:            https://github.com/Slicer/slicer-usage-stats/actions/workflows/ci.yml/badge.svg
+[actions-link]:             https://github.com/Slicer/slicer-usage-stats/actions
 [discourse-forum-badge]: https://img.shields.io/discourse/https/discourse.canceridc.dev/status.svg
 [discourse-forum-link]:  https://discourse.slicer.org/
 
