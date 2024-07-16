@@ -1,0 +1,52 @@
+[
+    {
+        "function": "onGenerateFibulaPlanesTimerTimeout",
+        "time": "2024-07-16T10:26:47.514818",
+        "selected_module": "BoneReconstructionPlanner"
+    },
+    {
+        "function": "onGenerateFibulaPlanesTimerTimeout",
+        "time": "2024-07-16T10:26:54.991833",
+        "selected_module": "BoneReconstructionPlanner"
+    },
+    {
+        "function": "onGenerateFibulaPlanesTimerTimeout",
+        "time": "2024-07-16T10:27:02.806923",
+        "selected_module": "BoneReconstructionPlanner"
+    },
+    {
+        "function": "onGenerateFibulaPlanesTimerTimeout",
+        "time": "2024-07-16T10:27:08.106462",
+        "selected_module": "BoneReconstructionPlanner"
+    },
+    {
+        "function": "makeBooleanOperationsToFibulaSurgicalGuideBase",
+        "time": "2024-07-16T10:27:15.871146",
+        "selected_module": "BoneReconstructionPlanner"
+    },
+    {
+        "function": "makeBooleanOperationsToFibulaSurgicalGuideBase",
+        "time": "2024-07-16T10:27:21.575344",
+        "selected_module": "BoneReconstructionPlanner"
+    },
+    {
+        "function": "makeBooleanOperationsToFibulaSurgicalGuideBase",
+        "time": "2024-07-16T10:27:28.211226",
+        "selected_module": "BoneReconstructionPlanner"
+    },
+    {
+        "function": "onGenerateFibulaPlanesTimerTimeout",
+        "time": "2024-07-16T10:27:40.342651",
+        "selected_module": "BoneReconstructionPlanner"
+    },
+    {
+        "function": "makeBooleanOperationsToFibulaSurgicalGuideBase",
+        "time": "2024-07-16T10:27:45.256983",
+        "selected_module": "BoneReconstructionPlanner"
+    },
+    {
+        "function": "onGenerateFibulaPlanesTimerTimeout",
+        "time": "2024-07-16T10:28:54.947433",
+        "selected_module": "BoneReconstructionPlanner"
+    }
+]

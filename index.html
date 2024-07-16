@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>3D Slicer Download Statistics</title>
+  <title>D3 Chart</title>
 
   <link rel="stylesheet" type="text/css" href="bower_components/dc.js/dc.css" />
   <link rel="stylesheet" type="text/css" href="bower_components/bootstrap-daterangepicker/daterangepicker.css" />
@@ -74,6 +74,9 @@
 
 </head>
 <body>
+  <div id="chart"></div>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <script src="test.js"></script>
 
   <div class="container" id="all-of-page">
     <div class="row">
@@ -92,88 +95,24 @@
     </div>
 
     <div class="content-row row initially-hidden">
-      <div class="col-md-4 col-sm-12 col-lg-4">
-        <div class="row">
-          <div class="col-md-12 col-sm-6 col-xs-12">
-            <div class="dc-chart">
-              <h2>Date range</h2>
-            <div>
-              <button class="btn btn-default" id="daterange">
-                <span class="glyphicon
-                glyphicon-calendar"></span>
-                <span id="daterange-content"></span>&nbsp;
-                <span class="caret"></span>
-              </button>
-            </div>
-          </div>
-        </div>
+      
 
 
-        <div class="col-md-12 col-sm-6 col-xs-12">
-          <div id="version-chart" class="dc-chart">
-            <div><h2>Version</h2>&nbsp;
-              <a class="reset" onclick="app.chartReset(app.versionChart)">
-                <span class="glyphicon glyphicon-remove"></span>
-              </a>
-            </div>
-          </div>
-        </div>
+        
 
 
-        <div class="col-md-12 col-sm-6 col-xs-12">
-          <div id="os-chart">
-            <div><h2>Operating system</h2>&nbsp;
-              <a class="reset" onclick="app.chartReset(app.osChart)">
-                <span class="glyphicon glyphicon-remove"></span>
-              </a>
-            </div>
-          </div>
-        </div>
+        
 
-        <div class="col-md-12 col-sm-6 col-xs-12">
-          <div id="stable-chart">
-            <div><h2>Stability</h2>&nbsp;
-              <a class="reset" onclick="app.chartReset(app.stableChart)">
-                <span class="glyphicon glyphicon-remove"></span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
+        
+      
     </div>
 
-<div class="col-md-4 col-sm-6">
-  <div id="region-chart">
-   <div> <h2>Region</h2>&nbsp;
-     <a class="reset" onclick="app.chartReset(app.regionChart)">
-       <span class="glyphicon glyphicon-remove"></span>
-     </a>
-   </div>
- </div>
+
+
+
 </div>
 
-<div class="col-md-4 col-sm-6">
-  <div id="country-chart">
-    <div> <h2>Country</h2>&nbsp;
-     <a class="reset" onclick="app.chartReset(app.countryChart)">
-       <span class="glyphicon glyphicon-remove"></span>
-     </a>
-   </div>
- </div>
-</div>
-</div>
 
-<div class="content-row row initially-hidden">
-  <div class="col-md-12">
-    <div id="month-chart" class="dc-chart">
-      <div> <h2>Downloads per day</h2>
-        <a class="reset" onclick="app.chartReset(app.monthChart)">
-         <span class="glyphicon glyphicon-remove"></span>
-       </a>
-     </div>
-   </div>
- </div>
-</div>
 
 </div>
 
@@ -187,7 +126,6 @@
 
 <script src="bower_components/dc.js/dc.js"></script> <!-- don't use .min version -->
 <script src="bower_components/colorbrewer/colorbrewer.js"></script>
-<script src="stats.js"></script>
 <script>
 app.main(AppDefaults);
 </script>
