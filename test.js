@@ -11,10 +11,13 @@ d3.json('data.json').then(function(data) {
     const moduleGroup = moduleDim.group().reduceCount();
     const functionGroup = functionDim.group().reduceCount();
 
-    // Adjusted createBarChart function for horizontal bars
+    // Adjusted createBarChart function for horizontal bars and click interaction
     function createBarChart(svgSelector, dimension, group, isModuleChart = false) {
+        // Clear any existing SVG
+        d3.select(svgSelector).html("");
+
         // Set up SVG container
-        const margin = {top: 20, right: 20, bottom: 30, left: 100},
+        const margin = {top: 20, right: 20, bottom: 30, left: 150},
             width = 960 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
     
@@ -24,28 +27,46 @@ d3.json('data.json').then(function(data) {
           .append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
     
-        // Create scales - swapping roles for horizontal bar chart
+        // Get sorted data
+        const data = group.all().sort((a, b) => b.value - a.value);
+    
+        // Create scales
         const y = d3.scaleBand()
-            .range([height, 0])
+            .range([0, height])
             .padding(0.1)
-            .domain(group.all().map(d => d.key));
+            .domain(data.map(d => d.key));
     
         const x = d3.scaleLinear()
             .range([0, width])
-            .domain([0, d3.max(group.all(), d => d.value)]);
+            .domain([0, d3.max(data, d => d.value)]);
     
-        // Draw bars with transition
+        // Draw bars with transition and click interaction
         svg.selectAll(".bar")
-            .data(group.all())
+            .data(data)
           .enter().append("rect")
             .attr("class", "bar")
             .attr("y", d => y(d.key))
             .attr("height", y.bandwidth())
             .attr("x", 0)
-            .attr("width", 0) // Start width at 0 for transition
-            .transition() // Apply a transition
-            .duration(1000) // Duration of transition in milliseconds
-            .attr("width", d => x(d.value)); // Transition to final width
+            .attr("width", 0)
+            .on("click", function(event, d) {
+                if (isModuleChart) {
+                    filterFunctionChart(d.key);
+                }
+            })
+            .transition()
+            .duration(1000)
+            .attr("width", d => x(d.value));
+    
+        // Add labels
+        svg.selectAll(".label")
+            .data(data)
+          .enter().append("text")
+            .attr("class", "label")
+            .attr("y", d => y(d.key) + y.bandwidth() / 2)
+            .attr("x", d => x(d.value) + 5)
+            .attr("dy", ".35em")
+            .text(d => d.value);
     
         // Add axes
         svg.append("g")
@@ -56,54 +77,51 @@ d3.json('data.json').then(function(data) {
             .call(d3.axisBottom(x));
     }
     
-    // Revised filterFunctionChart function with added debugging
-    function filterFunctionChart(selectedModule) {
-        console.log("Selected module:", selectedModule); // Check the selected module
-    
-        if (selectedModule === lastFilteredModule) {
-            console.log("Clearing filter for module:", selectedModule);
-            functionDim.filterAll();
-            lastFilteredModule = null;
-        } else {
-            console.log("Applying filter for module:", selectedModule);
-            functionDim.filter(d => d === selectedModule);
-            lastFilteredModule = selectedModule;
-        }
-    
-        console.log("Filtered data size:", functionDim.top(Infinity).length); // Check filtered data size
-    
-        // Redraw the function chart
-        d3.select("#functionChart svg").remove();
-        const functionGroupFiltered = functionDim.group().reduceCount();
-        console.log("Grouped data after filter:", functionGroupFiltered.all()); // Check grouped data after filter
-        createBarChart("#functionChart", functionDim, functionGroupFiltered);
-    }
-    // Example addition to filterFunctionChart to toggle filter off when the same module is clicked again
+    // Revised filterFunctionChart function
     let lastFilteredModule = null;
 
     function filterFunctionChart(selectedModule) {
+        console.log("Selected module:", selectedModule);
+    
         if (selectedModule === lastFilteredModule) {
-            // Clear the filter if the same module is clicked again
-            functionDim.filterAll();
+            console.log("Clearing filter for module:", selectedModule);
+            moduleDim.filterAll();
             lastFilteredModule = null;
         } else {
-            // Apply the new filter
-            functionDim.filter(d => d === selectedModule);
+            console.log("Applying filter for module:", selectedModule);
+            moduleDim.filter(selectedModule);
             lastFilteredModule = selectedModule;
         }
-
+    
+        // Log the current filter state
+        console.log("Current module filter:", moduleDim.currentFilter());
+    
+        // Get all data after filtering
+        const filteredData = moduleDim.top(Infinity);
+        console.log("Filtered data:", filteredData);
+    
+        // Recalculate the function group based on the filtered data
+        const filteredFunctionGroup = d3.rollup(filteredData, 
+            v => v.length, 
+            d => d.function
+        );
+    
+        console.log("Filtered function group:", filteredFunctionGroup);
+    
         // Redraw the function chart
-        d3.select("#functionChart svg").remove();
-        const functionGroupFiltered = functionDim.group().reduceCount();
-        createBarChart("#functionChart", functionDim, functionGroupFiltered);
+        createBarChart("#functionChart", functionDim, {
+            all: () => Array.from(filteredFunctionGroup, ([key, value]) => ({key, value}))
+        });
     }
     
     // Create bar charts with the modified function
-    createBarChart("#moduleChart", moduleDim, moduleGroup, true); // Pass true to enable click interaction for module chart
+    createBarChart("#moduleChart", moduleDim, moduleGroup, true);
     createBarChart("#functionChart", functionDim, functionGroup);
+
     // Make charts responsive
     function resizeCharts() {
-        // Redraw charts here based on new dimensions
+        createBarChart("#moduleChart", moduleDim, moduleGroup, true);
+        createBarChart("#functionChart", functionDim, functionGroup);
     }
 
     window.addEventListener('resize', resizeCharts);
