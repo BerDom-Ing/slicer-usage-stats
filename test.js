@@ -1,62 +1,110 @@
-const data = [
-    {"function": "onGenerateFibulaPlanesTimerTimeout", "time": "2024-07-16T10:26:47.514818", "selected_module": "BoneReconstructionPlanner"},
-    {"function": "onGenerateFibulaPlanesTimerTimeout", "time": "2024-07-16T10:26:54.991833", "selected_module": "BoneReconstructionPlanner"},
-    {"function": "onGenerateFibulaPlanesTimerTimeout", "time": "2024-07-16T10:27:02.806923", "selected_module": "BoneReconstructionPlanner"},
-    {"function": "onGenerateFibulaPlanesTimerTimeout", "time": "2024-07-16T10:27:08.106462", "selected_module": "BoneReconstructionPlanner"},
-    {"function": "makeBooleanOperationsToFibulaSurgicalGuideBase", "time": "2024-07-16T10:27:15.871146", "selected_module": "BoneReconstructionPlanner"},
-    {"function": "makeBooleanOperationsToFibulaSurgicalGuideBase", "time": "2024-07-16T10:27:21.575344", "selected_module": "BoneReconstructionPlanner"},
-    {"function": "makeBooleanOperationsToFibulaSurgicalGuideBase", "time": "2024-07-16T10:27:28.211226", "selected_module": "BoneReconstructionPlanner"},
-    {"function": "onGenerateFibulaPlanesTimerTimeout", "time": "2024-07-16T10:27:40.342651", "selected_module": "BoneReconstructionPlanner"},
-    {"function": "makeBooleanOperationsToFibulaSurgicalGuideBase", "time": "2024-07-16T10:27:45.256983", "selected_module": "BoneReconstructionPlanner"},
-    {"function": "onGenerateFibulaPlanesTimerTimeout", "time": "2024-07-16T10:28:54.947433", "selected_module": "BoneReconstructionPlanner"}
-];
+// Load the data
+d3.json('data.json').then(function(data) {
+    // Initialize Crossfilter
+    const cf = crossfilter(data);
 
-// Prepare the data
-const functionCounts = data.reduce((acc, val) => {
-    acc[val.function] = (acc[val.function] || 0) + 1;
-    return acc;
-}, {});
+    // Create dimensions for modules and functions
+    const moduleDim = cf.dimension(d => d.selected_module);
+    const functionDim = cf.dimension(d => d.function);
 
-const processedData = Object.keys(functionCounts).map(key => ({
-    function: key,
-    count: functionCounts[key]
-}));
+    // Group data
+    const moduleGroup = moduleDim.group().reduceCount();
+    const functionGroup = functionDim.group().reduceCount();
 
-// Set up SVG container
-const margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    // Adjusted createBarChart function for horizontal bars
+    function createBarChart(svgSelector, dimension, group, isModuleChart = false) {
+        // Set up SVG container
+        const margin = {top: 20, right: 20, bottom: 30, left: 100},
+            width = 960 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom;
+    
+        const svg = d3.select(svgSelector).append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+    
+        // Create scales - swapping roles for horizontal bar chart
+        const y = d3.scaleBand()
+            .range([height, 0])
+            .padding(0.1)
+            .domain(group.all().map(d => d.key));
+    
+        const x = d3.scaleLinear()
+            .range([0, width])
+            .domain([0, d3.max(group.all(), d => d.value)]);
+    
+        // Draw bars with transition
+        svg.selectAll(".bar")
+            .data(group.all())
+          .enter().append("rect")
+            .attr("class", "bar")
+            .attr("y", d => y(d.key))
+            .attr("height", y.bandwidth())
+            .attr("x", 0)
+            .attr("width", 0) // Start width at 0 for transition
+            .transition() // Apply a transition
+            .duration(1000) // Duration of transition in milliseconds
+            .attr("width", d => x(d.value)); // Transition to final width
+    
+        // Add axes
+        svg.append("g")
+            .call(d3.axisLeft(y));
+    
+        svg.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(x));
+    }
+    
+    // Revised filterFunctionChart function with added debugging
+    function filterFunctionChart(selectedModule) {
+        console.log("Selected module:", selectedModule); // Check the selected module
+    
+        if (selectedModule === lastFilteredModule) {
+            console.log("Clearing filter for module:", selectedModule);
+            functionDim.filterAll();
+            lastFilteredModule = null;
+        } else {
+            console.log("Applying filter for module:", selectedModule);
+            functionDim.filter(d => d === selectedModule);
+            lastFilteredModule = selectedModule;
+        }
+    
+        console.log("Filtered data size:", functionDim.top(Infinity).length); // Check filtered data size
+    
+        // Redraw the function chart
+        d3.select("#functionChart svg").remove();
+        const functionGroupFiltered = functionDim.group().reduceCount();
+        console.log("Grouped data after filter:", functionGroupFiltered.all()); // Check grouped data after filter
+        createBarChart("#functionChart", functionDim, functionGroupFiltered);
+    }
+    // Example addition to filterFunctionChart to toggle filter off when the same module is clicked again
+    let lastFilteredModule = null;
 
-const svg = d3.select("#chart").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", `translate(${margin.left},${margin.top})`);
+    function filterFunctionChart(selectedModule) {
+        if (selectedModule === lastFilteredModule) {
+            // Clear the filter if the same module is clicked again
+            functionDim.filterAll();
+            lastFilteredModule = null;
+        } else {
+            // Apply the new filter
+            functionDim.filter(d => d === selectedModule);
+            lastFilteredModule = selectedModule;
+        }
 
-// Create scales
-const x = d3.scaleBand()
-    .range([0, width])
-    .padding(0.1)
-    .domain(processedData.map(d => d.function));
+        // Redraw the function chart
+        d3.select("#functionChart svg").remove();
+        const functionGroupFiltered = functionDim.group().reduceCount();
+        createBarChart("#functionChart", functionDim, functionGroupFiltered);
+    }
+    
+    // Create bar charts with the modified function
+    createBarChart("#moduleChart", moduleDim, moduleGroup, true); // Pass true to enable click interaction for module chart
+    createBarChart("#functionChart", functionDim, functionGroup);
+    // Make charts responsive
+    function resizeCharts() {
+        // Redraw charts here based on new dimensions
+    }
 
-const y = d3.scaleLinear()
-    .range([height, 0])
-    .domain([0, d3.max(processedData, d => d.count)]);
-
-// Draw bars
-svg.selectAll(".bar")
-    .data(processedData)
-  .enter().append("rect")
-    .attr("class", "bar")
-    .attr("x", d => x(d.function))
-    .attr("width", x.bandwidth())
-    .attr("y", d => y(d.count))
-    .attr("height", d => height - y(d.count));
-
-// Add axes
-svg.append("g")
-    .attr("transform", `translate(0,${height})`)
-    .call(d3.axisBottom(x));
-
-svg.append("g")
-    .call(d3.axisLeft(y));
+    window.addEventListener('resize', resizeCharts);
+});

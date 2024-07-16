@@ -3,7 +3,8 @@
 <html>
 <head>
   <title>D3 Chart</title>
-
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter2/1.5.2/crossfilter.min.js"></script>
   <link rel="stylesheet" type="text/css" href="bower_components/dc.js/dc.css" />
   <link rel="stylesheet" type="text/css" href="bower_components/bootstrap-daterangepicker/daterangepicker.css" />
   <link rel="stylesheet" type="text/css"
@@ -70,66 +71,54 @@
    font-size: 10px;
    font-style: oblique;
  </style>
+ <style>
+        .bar {
+            fill: steelblue;
+        }
+        .bar:hover {
+            fill: orange;
+        }
+        svg {
+            font: 10px sans-serif;
+        }
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #000;
+        }
+    </style>
 
 
 </head>
 <body>
   <div id="chart"></div>
-  <script src="https://d3js.org/d3.v6.min.js"></script>
   <script src="test.js"></script>
-
+  
   <div class="container" id="all-of-page">
     <div class="row">
       <div class="col-md-1 col-sm-2 hidden-xs">
         <a href="https://www.slicer.org/"><img src="img/slicer-logo-80x80.png"></img></a>
       </div>
       <div class="col-md-9 col-sm-8 col-xs-8">
-       <h1>3D Slicer Download Statistics</h1>
+       <h1>3D Slicer Usage Statistics</h1>
       </div>
-
-      <div class="col-md-2 col-sm-2 col-xs-4">
-        <div class="dc-data-count">
-          <span class="filter-count"></span>
-        </div>
-      </div>
+      <div id="moduleChart"></div>
+      <div id="functionChart"></div>
     </div>
-
     <div class="content-row row initially-hidden">
-      
-
-
-        
-
-
-        
-
-        
-      
     </div>
-
-
-
-
 </div>
-
-
-
 </div>
-
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
-<script src="bower_components/d3/d3.min.js"></script>
 <script src="bower_components/spin.js/spin.min.js"></script>
 <script src="bower_components/lodash/dist/lodash.min.js"></script>
-<script src="bower_components/crossfilter/crossfilter.min.js"></script>
 <script src="bower_components/moment/min/moment-with-locales.min.js"></script>
 <script src="bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
-
 <script src="bower_components/dc.js/dc.js"></script> <!-- don't use .min version -->
 <script src="bower_components/colorbrewer/colorbrewer.js"></script>
 <script>
 app.main(AppDefaults);
 </script>
+<script src="https://d3js.org/d3.v6.min.js"></script>
 <hr>
-<p class="footnote">This webpage uses GeoLite2 data created by MaxMind, available from
-<a href="http://www.maxmind.com">http://www.maxmind.com</a>.</p>
 </body> </html>
