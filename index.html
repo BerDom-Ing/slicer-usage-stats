@@ -23,6 +23,11 @@
   display: none;
 }
 
+.charts-container {
+  display: flex;
+  justify-content: space-between;
+}
+
 .dc-chart {
     display: block;
   }
@@ -101,10 +106,10 @@
       </div>
       <div class="col-md-9 col-sm-8 col-xs-8">
        <h1>3D Slicer Usage Statistics</h1>
+       <div class="charts-container">
+        <div id="moduleChart" style="flex: 1;"></div>
+        <div id="functionChart" style="flex: 1;"></div>
       </div>
-      <div id="moduleChart"></div>
-      <div id="functionChart"></div>
-    </div>
     <div class="content-row row initially-hidden">
     </div>
 </div>

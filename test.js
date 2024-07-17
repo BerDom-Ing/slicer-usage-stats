@@ -1,3 +1,4 @@
+
 // Load the data
 d3.json('data.json').then(function(data) {
     // Initialize Crossfilter
@@ -12,14 +13,21 @@ d3.json('data.json').then(function(data) {
     const functionGroup = functionDim.group().reduceCount();
 
     // Adjusted createBarChart function for horizontal bars and click interaction
-    function createBarChart(svgSelector, dimension, group, isModuleChart = false) {
+    function createBarChart(svgSelector, dimension, group, isModuleChart = false, margin = {top: 20, right: 20, bottom: 30, left: 150}) {
         // Clear any existing SVG
         d3.select(svgSelector).html("");
 
-        // Set up SVG container
-        const margin = {top: 20, right: 20, bottom: 30, left: 150},
-            width = 960 - margin.left - margin.right,
-            height = 500 - margin.top - margin.bottom;
+        // Calculate dynamic height based on the number of data points, ensuring a minimum height
+        const dataBar = group.all().sort((a, b) => b.value - a.value);
+        const barHeight = 20; // Height per bar
+        const heightPerBar = barHeight + 10; // Height per bar including padding
+        let dynamicHeight = dataBar.length * heightPerBar;
+        const minHeight = 100; // Minimum height to ensure the bar doesn't go below the axis
+        dynamicHeight = Math.max(dynamicHeight, minHeight);
+
+    // Set up SVG container with dynamic height
+    const width = 480 - margin.left - margin.right,
+        height = dynamicHeight - margin.top - margin.bottom;
     
         const svg = d3.select(svgSelector).append("svg")
             .attr("width", width + margin.left + margin.right)
@@ -113,15 +121,21 @@ d3.json('data.json').then(function(data) {
             all: () => Array.from(filteredFunctionGroup, ([key, value]) => ({key, value}))
         });
     }
+    const commonMargin = {top: 20, right: 20, bottom: 30, left: 150};
     
-    // Create bar charts with the modified function
-    createBarChart("#moduleChart", moduleDim, moduleGroup, true);
-    createBarChart("#functionChart", functionDim, functionGroup);
+    // Create bar charts with the modified function, passing the common margin
+    createBarChart("#moduleChart", moduleDim, moduleGroup, true, commonMargin);
+    createBarChart("#functionChart", functionDim, functionGroup, false, commonMargin);
 
-    // Make charts responsive
+    // Adjust the resizeCharts function accordingly
     function resizeCharts() {
-        createBarChart("#moduleChart", moduleDim, moduleGroup, true);
-        createBarChart("#functionChart", functionDim, functionGroup);
+        // Recalculate the width based on the current window size or parent container size
+        const newWidth = document.querySelector(svgSelector).clientWidth - commonMargin.left - commonMargin.right;
+        const newHeight = dynamicHeight - commonMargin.top - commonMargin.bottom; // Consider recalculating dynamicHeight if it depends on external factors
+    
+        // Recreate the bar charts with new dimensions
+        createBarChart("#moduleChart", moduleDim, moduleGroup, true, {...commonMargin, width: newWidth, height: newHeight});
+        createBarChart("#functionChart", functionDim, functionGroup, false, {...commonMargin, width: newWidth, height: newHeight});
     }
 
     window.addEventListener('resize', resizeCharts);
