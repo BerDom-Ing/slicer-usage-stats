@@ -19,35 +19,12 @@
 
   <style type="text/css">
 
-.initially-hidden {
-  display: none;
-}
+
 
 .charts-container {
   display: flex;
   justify-content: space-between;
 }
-
-.dc-chart {
-    display: block;
-  }
-
-.dc-chart .axis path,
-.dc-chart .axis line {
-    stroke: #ccc;
-}
-
-  .dc-chart g.row text {
-    fill: #000000;
-    font-weight: normal;
-  }
-
-  .dc-data-count .filter-count {
-    margin-bottom: 1px;
-    margin-top: 1px;
-    font-size: 40px;
-    color: #aaaaaa;
-  }
 
   h2 {
     display:inline-block;
@@ -56,20 +33,6 @@
     margin-top: 5px;
   }
 
-
-  #daterange {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    width: 275px;
-  }
-  #daterange-content {
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-
-  .negmargin {
-   margin-left: -15px;
- }
 .footnote {
    margin-left: 15px;
    margin-top: -5px;
@@ -81,7 +44,7 @@
             fill: steelblue;
         }
         .bar:hover {
-            fill: orange;
+            fill: rgb(148, 197, 237);
         }
         svg {
             font: 10px sans-serif;
@@ -114,13 +77,5 @@
     </div>
 </div>
 </div>
-<script src="bower_components/jquery/dist/jquery.min.js"></script>
-<script src="bower_components/spin.js/spin.min.js"></script>
-<script src="bower_components/lodash/dist/lodash.min.js"></script>
-<script src="bower_components/moment/min/moment-with-locales.min.js"></script>
-<script src="bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
-<script src="bower_components/dc.js/dc.js"></script> <!-- don't use .min version -->
-<script src="bower_components/colorbrewer/colorbrewer.js"></script>
-<script src="https://d3js.org/d3.v6.min.js"></script>
 <hr>
 </body> </html>
