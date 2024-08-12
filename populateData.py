@@ -3,15 +3,15 @@ import random
 from datetime import datetime, timedelta
 import json
 
-# Function to generate random datetime strings
+# Function to generate random datetime strings within a range of months and days
 def random_datetime(start, end):
-    return (start + timedelta(
-        seconds=random.randint(0, int((end - start).total_seconds())),
-    )).isoformat()
+    random_days = random.randint(0, (end - start).days)
+    random_seconds = random.randint(0, 86400)  # Number of seconds in a day
+    return (start + timedelta(days=random_days, seconds=random_seconds)).isoformat()
 
 # Start and end datetime for generating random times
-start_time = datetime(2024, 7, 16, 10, 26, 47)
-end_time = datetime(2024, 7, 16, 18, 40, 15)
+start_time = datetime(2024, 1, 1)
+end_time = datetime(2024, 12, 31)
 
 # List of functions to be used
 functions = [
@@ -108,6 +108,5 @@ for module in modules:
 # Convert to DataFrame
 df = pd.DataFrame(data)
 
-# Convert DataFrame to JSON and write to file
-with open('data.json', 'w') as file:
-    file.write(df.to_json(orient='records', date_format='iso', indent=4))
+# Convert DataFrame to CSV and write to file
+df.to_csv('data.csv', index=False)

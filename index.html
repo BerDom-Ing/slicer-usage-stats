@@ -1,81 +1,39 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
-  <title>D3 Chart</title>
-  <script src="https://d3js.org/d3.v6.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter2/1.5.2/crossfilter.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="bower_components/dc.js/dc.css" />
-  <link rel="stylesheet" type="text/css" href="bower_components/bootstrap-daterangepicker/daterangepicker.css" />
-  <link rel="stylesheet" type="text/css"
-  href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
-
-  <script>
-  var AppDefaults = {
-    downloadDataFile: 'var/slicer-download-data.json',
-    fallbackDataFile: 'etc/fallback/slicer-download-data.json'
-  };
-  </script>
-
-  <style type="text/css">
-
-
-
-.charts-container {
-  display: flex;
-  justify-content: space-between;
-}
-
-  h2 {
-    display:inline-block;
-    font-size: 140%;
-    margin-bottom: 0px;
-    margin-top: 5px;
-  }
-
-.footnote {
-   margin-left: 15px;
-   margin-top: -5px;
-   font-size: 10px;
-   font-style: oblique;
- </style>
- <style>
-        .bar {
-            fill: steelblue;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temporal Data Exploration</title>
+    <link rel="stylesheet" type="text/css" href="bower_components/dc.js/dc.css" />
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap-daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" type="text/css"
+     href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    
+    <style>
+        .chart-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .bar:hover {
-            fill: rgb(148, 197, 237);
-        }
-        svg {
-            font: 10px sans-serif;
-        }
-        .axis path,
-        .axis line {
-            fill: none;
-            stroke: #000;
+        .chart {
+            margin-bottom: 20px;
         }
     </style>
-
-
 </head>
 <body>
-  <div id="chart"></div>
-  <script src="test.js"></script>
-  
-  <div class="container" id="all-of-page">
-    <div class="row">
-      <div class="col-md-1 col-sm-2 hidden-xs">
-        <a href="https://www.slicer.org/"><img src="img/slicer-logo-80x80.png"></img></a>
-      </div>
-      <div class="col-md-9 col-sm-8 col-xs-8">
-       <h1>3D Slicer Usage Statistics</h1>
-       <div class="charts-container">
-        <div id="moduleChart" style="flex: 1;"></div>
-        <div id="functionChart" style="flex: 1;"></div>
-      </div>
-    <div class="content-row row initially-hidden">
+  <div class="col-md-1 col-sm-2 hidden-xs">
+    <a href="https://www.slicer.org/"><img src="img/slicer-logo-80x80.png"></img></a>
+  </div>
+    <div class="chart-container">
+        <button id="reset-button">Reset All Filters</button>
+        <div id="time-chart" class="chart"></div>
+        <div id="module-chart" class="chart"></div>
+        <div id="function-chart" class="chart"></div>
     </div>
-</div>
-</div>
-<hr>
-</body> </html>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter2/1.5.4/crossfilter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dc/4.2.7/dc.min.js"></script>
+    <script src="test.js"></script>
+</body>
+</html>
