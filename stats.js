@@ -35,13 +35,13 @@ Promise.all([
 
     // Set up the charts
     const timeChart = dc.barChart("#time-chart");
-    const moduleChart = dc.barChart("#module-chart");
+    const moduleChart = dc.rowChart("#module-chart");
     const functionChart = dc.rowChart("#function-chart");
     const cityChart = dc.barChart("#city-chart");
 
     // Time chart
     timeChart
-        .width(900)
+        .width(800)
         .height(200)
         .margins({top: 10, right: 10, bottom: 20, left: 40})
         .dimension(dateDim)
@@ -53,27 +53,26 @@ Promise.all([
         .renderHorizontalGridLines(true)
         .brushOn(true);
 
-    // Module chart (horizontal bar chart)
+
+    // Module chart
     moduleChart
-        .width(900)
-        .height(300)
-        .margins({top: 20, right: 20, bottom: 100, left: 40})
-        .dimension(moduleDim)
-        .group(moduleGroup)
-        .x(d3.scaleBand())
-        .xUnits(dc.units.ordinal)
-        .elasticY(true)
-        .ordering(d => -d.value)
-        .renderHorizontalGridLines(true)
-        .on('renderlet', function(chart) {
-            chart.selectAll('g.x text')
-                .attr('transform', 'translate(-10,10) rotate(270)');
-        });
+    .width(300)
+    .height(700)
+    .margins({top: 20, left: 10, right: 10, bottom: 20})
+    .dimension(moduleDim)
+    .group(moduleGroup)
+    .elasticX(true)
+    .ordering(d => -d.value)
+    .title(d => `${d.key}: ${d.value}`)
+    .on('renderlet', function(chart) {
+        chart.selectAll('g.row text')
+            .style('fill', 'black');
+    });
 
     // Function chart
     functionChart
-    .width(400)
-    .height(300)
+    .width(300)
+    .height(700)
     .margins({top: 20, left: 10, right: 10, bottom: 20})
     .dimension(functionDim)
     .group(functionGroup)
@@ -103,8 +102,8 @@ Promise.all([
     });    
 
     // World Map
-    const width = 960;
-    const height = 500;
+    const width = 800;
+    const height = 400;
 
     const svg = d3.select("#map-chart")
         .append("svg")
@@ -112,7 +111,7 @@ Promise.all([
         .attr("height", height);
 
     const projection = d3.geoMercator()
-        .scale(130)
+        .scale(100)
         .center([0,20])
         .translate([width / 2, height / 2]);
 
@@ -139,7 +138,7 @@ Promise.all([
                 const count = countryData[d.id] || 0;
                 return colorScale(count);
             })
-            .attr("stroke", d => selectedCountries.includes(d.id) ? "red" : "#fff")
+            .attr("stroke", d => selectedCountries.includes(d.id) ? "rgb(220, 68, 68)" : "#fff")
             .attr("stroke-width", d => selectedCountries.includes(d.id) ? 2 : 0.5)
             .on("click", function(event, d) {
                 const country = d.id;
