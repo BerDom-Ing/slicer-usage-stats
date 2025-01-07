@@ -54,31 +54,43 @@ Promise.all([
         .brushOn(true);
 
 
-    // Module chart
-    moduleChart
-    .width(300)
-    .height(700)
+// Module chart
+moduleChart
+    .width(280)  // Slightly smaller to account for scrollbar
+    .height(function() {
+        const itemCount = moduleGroup.all().length;
+        const barAndGapHeight = 33; // 30px bar + 3px gap
+        return itemCount * barAndGapHeight + 40; // 40 for top/bottom margins
+    })
     .margins({top: 20, left: 10, right: 10, bottom: 20})
     .dimension(moduleDim)
     .group(moduleGroup)
     .elasticX(true)
     .ordering(d => -d.value)
     .title(d => `${d.key}: ${d.value}`)
+    .fixedBarHeight(30)  // Add fixed height for each bar
+    .gap(3)  // Space between bars
     .on('renderlet', function(chart) {
         chart.selectAll('g.row text')
             .style('fill', 'black');
     });
 
-    // Function chart
-    functionChart
-    .width(300)
-    .height(700)
+// Function chart (same modifications)
+functionChart
+    .width(280)
+    .height(function() {
+        const itemCount = functionGroup.all().length;
+        const barAndGapHeight = 33; // 30px bar + 3px gap
+        return itemCount * barAndGapHeight + 40; // 40 for top/bottom margins
+    })
     .margins({top: 20, left: 10, right: 10, bottom: 20})
     .dimension(functionDim)
     .group(functionGroup)
     .elasticX(true)
     .ordering(d => -d.value)
     .title(d => `${d.key}: ${d.value}`)
+    .fixedBarHeight(30)
+    .gap(3)
     .on('renderlet', function(chart) {
         chart.selectAll('g.row text')
             .style('fill', 'black');

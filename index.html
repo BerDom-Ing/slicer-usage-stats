@@ -52,6 +52,23 @@
             stroke-width: 2px;
         }
     </style>
+    <style>
+        /* Add these styles to your existing CSS */
+        .chart-container {
+            height: 700px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        
+        /* Update existing styles */
+        .left-container, .right-container {
+            flex: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            max-height: 100vh;
+        }
+        </style>
 </head>
 <body>
     <div class="col-md-1 col-sm-2 hidden-xs">
@@ -59,7 +76,9 @@
     </div>
     <div class="main-container">
         <div class="left-container">
-            <div id="module-chart" class="chart"></div>
+            <div class="chart-container">
+                <div id="module-chart" class="chart"></div>
+            </div>
         </div>
         <div class="center-container">
             <button id="reset-button">Reset All Filters</button>
@@ -68,7 +87,9 @@
             <div id="map-chart" class="chart"></div>
         </div>
         <div class="right-container">
-            <div id="function-chart" class="chart"></div>
+            <div class="chart-container">
+                <div id="function-chart" class="chart"></div>
+            </div>
         </div>
     </div>
 
