@@ -246,16 +246,24 @@ Promise.all([
                     const cityChart = dc.barChart("#city-chart");
                     
                     // Time chart
+                    // Get the full date range and add padding to ensure all dates are visible
+                    const dateExtent = d3.extent(expandedData, d => d.date);
+                    const paddedDateExtent = [
+                        d3.timeDay.offset(dateExtent[0], -1), // Add 1 day before
+                        d3.timeDay.offset(dateExtent[1], 1)   // Add 1 day after
+                    ];
+                    
                     timeChart
                         .width(function() { return document.querySelector("#time-chart").offsetWidth; })
                         .height(200)
                         .margins({top: 10, right: 10, bottom: 20, left: 40})
                         .dimension(dateDim)
                         .group(dateGroup)
-                        .x(d3.scaleTime().domain(d3.extent(data, d => d.date)))
+                        .x(d3.scaleTime().domain(paddedDateExtent))
                         .round(d3.timeDay.round)
                         .xUnits(d3.timeDays)
                         .elasticY(true)
+                        .elasticX(false) // Disable elastic X to prevent auto-cropping
                         .renderHorizontalGridLines(true)
                         .brushOn(true);
 
