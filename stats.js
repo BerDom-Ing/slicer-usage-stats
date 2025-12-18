@@ -40,7 +40,7 @@ Promise.all([
         // Start with CSV loading message
         updateLoadingStatus('Loading CSV data...');
         
-        d3.csv('random_usage_data.csv', function(d) {
+        d3.csv('data.csv', function(d) {
             // This callback runs for each row
             rowCount++;
             
@@ -65,6 +65,41 @@ Promise.all([
     d3.json('world.geojson')
 ]).then(function([data, worldData]) {
     console.time('Data processing time');
+
+    // Check if data is empty and handle gracefully
+    if (!data || data.length === 0) {
+        console.log('No data found in CSV file');
+        updateLoadingStatus('No data found');
+        updateProgressBar(100);
+        
+        // Hide loading spinner and show a message
+        document.getElementById('loading-spinner').style.display = 'none';
+        
+        // Display a user-friendly message
+        const messageElement = document.createElement('div');
+        messageElement.style.cssText = `
+            text-align: center; 
+            padding: 50px; 
+            font-size: 18px; 
+            color: #666;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            margin: 20px;
+        `;
+        messageElement.innerHTML = `
+            <h3>No Data Available</h3>
+            <p>The CSV file appears to be empty or could not be loaded.</p>
+            <p>Please check that 'data.csv' contains valid data.</p>
+        `;
+        
+        // Replace the charts container with the message
+        const chartsContainer = document.querySelector('.container') || document.body;
+        chartsContainer.appendChild(messageElement);
+        
+        console.timeEnd('Total loading time');
+        return; // Exit early
+    }
     
     // Update loading status for processing phase
     updateLoadingStatus('Processing data...');
